@@ -1,7 +1,13 @@
 # Rinku
 
-Rinku is a simple abstraction to enable linking a series of steps, stepping through them one by one, and returning the result of the final link in the chain.
-If an error occurs along the way, it will stop early and return the error.
+Rinku is a simple abstraction to enable linking a series of steps.
+
+To begin, multiple steps are linked together using `Rinku.link`.
+Once we've built a chain of steps, the `run` function will begin the chain.
+One by one, each function is called.
+At the end of a function's execution, the result is passed the first argument for the next.
+The chain will end immediately if any function returns a tuple with `:error` as the first element.
+Once the chain exhausts all of it's links, it will return the result of the final link.
 
 ```elixir
 3 =
@@ -14,6 +20,7 @@ If an error occurs along the way, it will stop early and return the error.
 {:error, :oh_no} = 
   Rinku.new()
   |> Rinku.link(fn _ -> {:error, :on_no} end)
+  |> Rinku.link(fn _input -> 10 end)
   |> Rinku.run()
 ```
 
@@ -26,6 +33,8 @@ For the Elixir/Erlang versions, please refer to the supplied `.tool-versions` (c
 ## Practical Examples
 
 A scenario where we want to accept an arbitrary map, convert it into an Ecto schema, then save it to a database.
+In the `SomeContext` module, there are two functions showcasing the same logic.
+One function uses a `with` chain, the other uses a `Rinku` chain.
 
 ```elixir
 defmodule SomeSchema do
@@ -35,7 +44,20 @@ defmodule SomeSchema do
 end
 
 defmodule SomeContext do
-  def create(record_params, access_token) do
+  def create_with_with(record_params, access_token) do
+    with {:ok, changeset} <- SomeSchema.changeset(record_params),
+         {:ok, struct} <- SomeSchema.coerce(changeset),
+         {:ok, result} = result <- SomeSchema.save(struct, access_token) do
+         result
+    else
+      {:error, %Ecto.Changeset{} = error_changeset} -> 
+        {:error, :invalid_params, error_changeset}
+      {:error, :forbidden} ->
+        {:error, :not_allowed_to_save}
+    end
+  end
+
+  def create_with_rinku(record_params, access_token) do
     record_params
     |> Rinku.new()
     |> Rinku.link({SomeSchema, :changeset, []})
@@ -43,9 +65,12 @@ defmodule SomeContext do
     |> Rinku.link({SomeSchema, :save, access_token})
     |> Rinku.run()
     |> case do
-      {:error, %Ecto.Changeset{}} = error -> error
-      {:error, :forbbiden} -> {:error, :not_allowed_to_save}
-      {:ok, _result} = result -> result
+      {:error, %Ecto.Changeset{} = error_changeset} -> 
+        {:error, :invalid_params, error_changeset}
+      {:error, :forbbiden} -> 
+        {:error, :not_allowed_to_save}
+      {:ok, _result} = result -> 
+        result
     end
   end
 end

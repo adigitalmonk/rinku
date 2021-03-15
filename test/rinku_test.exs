@@ -26,7 +26,7 @@ defmodule RinkuTest do
         |> Rinku.link({__MODULE__, :some_func, "val"})
 
       chain.links
-      |> Enum.each(fn {some_module, some_func, some_arg} ->
+      |> Enum.each(fn %{callback: {some_module, some_func, some_arg}} ->
         assert some_module == __MODULE__
         assert some_func == :some_func
         assert some_arg == "val"
@@ -41,7 +41,7 @@ defmodule RinkuTest do
         |> Rinku.link({fn input -> input end, "val"})
 
       chain.links
-      |> Enum.each(fn {func, arg} ->
+      |> Enum.each(fn %{callback: {func, arg}} ->
         assert is_function(func)
         assert arg == "val"
       end)
@@ -55,8 +55,8 @@ defmodule RinkuTest do
         |> Rinku.link(fn input -> input end)
 
       chain.links
-      |> Enum.each(fn func ->
-        assert is_function(func)
+      |> Enum.each(fn link ->
+        assert is_function(link.callback)
       end)
     end
   end

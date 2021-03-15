@@ -8,7 +8,8 @@ defmodule Rinku do
 
   The input will always be the first argument provided to the next link in the chain.
   """
-  defstruct [:input, :links]
+  defstruct [:input, :links, :output]
+  alias Rinku.Link
 
   @opaque t() :: %__MODULE__{}
   @type link_function() :: (... -> any() | {:error, any()})
@@ -36,11 +37,18 @@ defmodule Rinku do
   Either an anonymous function that takes one argument or a tuple of `{module, function, arguments}` can be provided.
 
   iex> Rinku.new("test") |> Rinku.link({SomeModule, :some_func, 1})
-  %Rinku{input: "test", links: [{SomeModule, :some_func, 1}]}
+  %Rinku{
+    input: "test",
+    links: [
+      %Rinku.Link{callback: {SomeModule, :some_func, 1}}
+    ]
+  }
   """
   @spec link(t(), link()) :: t()
   def link(%__MODULE__{links: links} = chain, new_link) do
-    %__MODULE__{chain | links: [new_link | links]}
+    link = %Rinku.Link{callback: new_link}
+
+    %__MODULE__{chain | links: [link | links]}
   end
 
   @doc """
@@ -51,35 +59,12 @@ defmodule Rinku do
     links
     |> Enum.reverse()
     |> Enum.reduce_while(chain_input, fn link, link_input ->
-      process_link(link, link_input)
+      link
+      |> Link.process_link(link_input)
       |> case do
         {:error, _error} = error -> {:halt, error}
         output -> {:cont, output}
       end
     end)
-  end
-
-  defp process_link({mod, func, arguments}, link_input) do
-    arguments =
-      case is_list(arguments) do
-        true -> [link_input | arguments]
-        false -> [link_input, arguments]
-      end
-
-    apply(mod, func, arguments)
-  end
-
-  defp process_link({func, arguments}, link_input) do
-    arguments =
-      case is_list(arguments) do
-        true -> [link_input | arguments]
-        false -> [link_input, arguments]
-      end
-
-    apply(func, arguments)
-  end
-
-  defp process_link(func, link_input) do
-    apply(func, [link_input])
   end
 end

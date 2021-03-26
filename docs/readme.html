@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.24.1">
+    <meta name="project" content="rinku v0.0.1">
+
+    <title>Rinku — rinku v0.0.1</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-d1b779f2ad.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+  </head>
+  <body data-type="extras">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="https://adigitalmonk.github.io/rinku" class="sidebar-projectName">
+rinku
+      </a>
+      <strong class="sidebar-projectVersion">
+        v0.0.1
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+<h1>Rinku</h1><p><img src="https://github.com/adigitalmonk/rinku/actions/workflows/elixir.yaml/badge.svg" alt="Continuous Integration Status"></img></p><p>Rinku is a simple abstraction to enable linking a series of steps.</p><p>To begin a new <a href="Rinku.html#new/2"><code class="inline">Rinku.new/2</code></a> chain is created with some initial value (<code class="inline">nil</code> by default).
+Then, multiple links / function calls are added together using <a href="Rinku.html#link/2"><code class="inline">Rinku.link/2</code></a>.
+Once we've built the chain, the <a href="Rinku.html#run/1"><code class="inline">Rinku.run/1</code></a> function resolve the links in the order they were added.
+The first argument to a link is always the result of the previous link's execution.</p><p>At the end of a function's execution, the result is passed the first argument for the next.
+The chain will end immediately if any function returns a tuple with <code class="inline">:error</code> as the first element.
+Once the chain exhausts all of it's links, the <a href="Rinku.html#result/1"><code class="inline">Rinku.result/1</code></a> function will extract the final result.</p><pre><code class="makeup elixir"><span class="mi">3</span><span class="w"> </span><span class="o">=</span><span class="w">
+  </span><span class="mi">1</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="2724853860-1">(</span><span class="p" data-group-id="2724853860-1">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="2724853860-2">(</span><span class="k" data-group-id="2724853860-3">fn</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="2724853860-3">end</span><span class="p" data-group-id="2724853860-2">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="2724853860-4">(</span><span class="k" data-group-id="2724853860-5">fn</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="2724853860-5">end</span><span class="p" data-group-id="2724853860-4">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="2724853860-6">(</span><span class="p" data-group-id="2724853860-6">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="2724853860-7">(</span><span class="p" data-group-id="2724853860-7">)</span></code></pre><p>You can provide extra arguments to individual steps (from a number of ways) instead of just feeding data through the chain.</p><pre><code class="makeup elixir"><span class="n">previous_result</span><span class="w"> </span><span class="o">=</span><span class="w"> 
+  </span><span class="mi">1</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="0981431259-1">(</span><span class="p" data-group-id="0981431259-1">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="0981431259-2">(</span><span class="p" data-group-id="0981431259-3">{</span><span class="k" data-group-id="0981431259-4">fn</span><span class="w"> </span><span class="n">input</span><span class="p">,</span><span class="w"> </span><span class="n">four</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">four</span><span class="w"> </span><span class="k" data-group-id="0981431259-4">end</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p" data-group-id="0981431259-3">}</span><span class="p" data-group-id="0981431259-2">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="0981431259-5">(</span><span class="p" data-group-id="0981431259-5">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="0981431259-6">(</span><span class="p" data-group-id="0981431259-6">)</span><span class="w">
+
+</span><span class="n">assert</span><span class="w"> </span><span class="n">previous_result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="w">
+
+</span><span class="n">new_result</span><span class="w"> </span><span class="o">=</span><span class="w"> 
+  </span><span class="mi">5</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="0981431259-7">(</span><span class="p" data-group-id="0981431259-7">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="0981431259-8">(</span><span class="k" data-group-id="0981431259-9">fn</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">previous_result</span><span class="w"> </span><span class="k" data-group-id="0981431259-9">end</span><span class="p" data-group-id="0981431259-8">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="0981431259-10">(</span><span class="p" data-group-id="0981431259-10">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="0981431259-11">(</span><span class="p" data-group-id="0981431259-11">)</span><span class="w">
+
+</span><span class="n">assert</span><span class="w"> </span><span class="n">new_result</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">10</span></code></pre><p>Additional arguments are provided to module calls using the common tuple format, <code class="inline">{SomeModule, :function, [:one, :two]}</code>.
+The input from the previous step will always be injected as the first argument, other arguments will be added subsequently.</p><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">SomeMod</span><span class="w"> </span><span class="k" data-group-id="0220557206-1">do</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">combine</span><span class="p" data-group-id="0220557206-2">(</span><span class="n">init</span><span class="p">,</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="n">b</span><span class="p" data-group-id="0220557206-2">)</span><span class="p">,</span><span class="w"> </span><span class="ss">do</span><span class="p">:</span><span class="w"> </span><span class="n">init</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="w">
+</span><span class="k" data-group-id="0220557206-1">end</span><span class="w">
+
+</span><span class="mi">5</span><span class="w"> </span><span class="o">=</span><span class="w"> 
+  </span><span class="mi">1</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="0220557206-3">(</span><span class="p" data-group-id="0220557206-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="0220557206-4">(</span><span class="p" data-group-id="0220557206-5">{</span><span class="nc">SomeMod</span><span class="p">,</span><span class="w"> </span><span class="ss">:combine</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="0220557206-6">[</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p" data-group-id="0220557206-6">]</span><span class="p" data-group-id="0220557206-5">}</span><span class="p" data-group-id="0220557206-4">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="0220557206-7">(</span><span class="p" data-group-id="0220557206-7">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="0220557206-8">(</span><span class="p" data-group-id="0220557206-8">)</span></code></pre><p>If a function returns an <code class="inline">:error</code> along the way, it'll halt execution.
+Errors can be either just the atom <code class="inline">:error</code>, or an error tuple of any length. 
+E.g., <code class="inline">{:error, :thing}</code>, <code class="inline">{:error, :thing, :other}</code>, <code class="inline">{:error, :thing, :other, :more}</code>.</p><pre><code class="makeup elixir"><span class="p" data-group-id="6609227055-1">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:oh_no</span><span class="p" data-group-id="6609227055-1">}</span><span class="w"> </span><span class="o">=</span><span class="w"> 
+  </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="6609227055-2">(</span><span class="p" data-group-id="6609227055-2">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="6609227055-3">(</span><span class="k" data-group-id="6609227055-4">fn</span><span class="w"> </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="6609227055-5">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:oh_no</span><span class="p" data-group-id="6609227055-5">}</span><span class="w"> </span><span class="k" data-group-id="6609227055-4">end</span><span class="p" data-group-id="6609227055-3">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="6609227055-6">(</span><span class="k" data-group-id="6609227055-7">fn</span><span class="w"> </span><span class="c">_input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="k" data-group-id="6609227055-7">end</span><span class="p" data-group-id="6609227055-6">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="6609227055-8">(</span><span class="p" data-group-id="6609227055-8">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="6609227055-9">(</span><span class="p" data-group-id="6609227055-9">)</span></code></pre><p>If for some reason you need to recover an earlier result, you can name your steps and recover the results that way.
+You can name the input as well, if you have a need or desire to do that.
+Naming is optional, but you'll need a unique name to get the correct result for a step.</p><pre><code class="makeup elixir"><span class="n">processed_chain</span><span class="w"> </span><span class="o">=</span><span class="w"> 
+  </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="6102382652-1">(</span><span class="ss">:input_value</span><span class="p">,</span><span class="w"> </span><span class="ss">:input_name</span><span class="p" data-group-id="6102382652-1">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="6102382652-2">(</span><span class="k" data-group-id="6102382652-3">fn</span><span class="w"> </span><span class="c">_input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:result1</span><span class="w"> </span><span class="k" data-group-id="6102382652-3">end</span><span class="p">,</span><span class="w"> </span><span class="ss">:step1</span><span class="p" data-group-id="6102382652-2">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="6102382652-4">(</span><span class="k" data-group-id="6102382652-5">fn</span><span class="w"> </span><span class="c">_input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:result2</span><span class="w"> </span><span class="k" data-group-id="6102382652-5">end</span><span class="p">,</span><span class="w"> </span><span class="ss">:step2</span><span class="p" data-group-id="6102382652-4">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="6102382652-6">(</span><span class="k" data-group-id="6102382652-7">fn</span><span class="w"> </span><span class="c">_input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="ss">:result3</span><span class="w"> </span><span class="k" data-group-id="6102382652-7">end</span><span class="p">,</span><span class="w"> </span><span class="ss">:step3</span><span class="p" data-group-id="6102382652-6">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="6102382652-8">(</span><span class="p" data-group-id="6102382652-8">)</span><span class="w">
+
+</span><span class="n">assert</span><span class="w"> </span><span class="n">processed_chain</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link_result</span><span class="p" data-group-id="6102382652-9">(</span><span class="ss">:input_name</span><span class="p" data-group-id="6102382652-9">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:input_value</span><span class="w">
+</span><span class="n">assert</span><span class="w"> </span><span class="n">processed_chain</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link_result</span><span class="p" data-group-id="6102382652-10">(</span><span class="ss">:step1</span><span class="p" data-group-id="6102382652-10">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:result1</span><span class="w">
+</span><span class="n">assert</span><span class="w"> </span><span class="n">processed_chain</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link_result</span><span class="p" data-group-id="6102382652-11">(</span><span class="ss">:step2</span><span class="p" data-group-id="6102382652-11">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:result2</span><span class="w">
+</span><span class="n">assert</span><span class="w"> </span><span class="n">processed_chain</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link_result</span><span class="p" data-group-id="6102382652-12">(</span><span class="ss">:step3</span><span class="p" data-group-id="6102382652-12">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:result3</span><span class="w">
+</span><span class="n">assert</span><span class="w"> </span><span class="n">processed_chain</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="6102382652-13">(</span><span class="p" data-group-id="6102382652-13">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="ss">:result3</span></code></pre><p>A completed chain can also be appended and re-run if necessary.
+All steps are re-run, not just the newly added ones.</p><pre><code class="makeup elixir"><span class="n">chain</span><span class="w"> </span><span class="o">=</span><span class="w">
+  </span><span class="mi">1</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8212158796-1">(</span><span class="p" data-group-id="8212158796-1">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8212158796-2">(</span><span class="k" data-group-id="8212158796-3">fn</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="8212158796-3">end</span><span class="p" data-group-id="8212158796-2">)</span><span class="w">
+
+</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w">
+  </span><span class="n">chain</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="8212158796-4">(</span><span class="p" data-group-id="8212158796-4">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="8212158796-5">(</span><span class="p" data-group-id="8212158796-5">)</span><span class="w">
+
+</span><span class="n">assert</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">2</span><span class="w">
+
+</span><span class="n">other_value</span><span class="w"> </span><span class="o">=</span><span class="w">
+  </span><span class="n">chain</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8212158796-6">(</span><span class="k" data-group-id="8212158796-7">fn</span><span class="w"> </span><span class="n">input</span><span class="w"> </span><span class="o">-&gt;</span><span class="w">
+    </span><span class="n">input</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">1</span><span class="w">
+  </span><span class="k" data-group-id="8212158796-7">end</span><span class="p" data-group-id="8212158796-6">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="8212158796-8">(</span><span class="p" data-group-id="8212158796-8">)</span><span class="w">
+  </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="8212158796-9">(</span><span class="p" data-group-id="8212158796-9">)</span><span class="w">
+
+</span><span class="n">assert</span><span class="w"> </span><span class="n">other_value</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">3</span></code></pre><p>See <a href="#practical-examples">Practical Examples</a> for a few realistic use cases.</p><h2 id="developing" class="section-heading">
+  <a href="#developing" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Developing
+</h2>
+<p>For the Elixir/Erlang versions, please refer to the supplied <code class="inline">.tool-versions</code> (compatible with <code class="inline">asdf</code>).</p><h2 id="practical-examples" class="section-heading">
+  <a href="#practical-examples" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Practical Examples
+</h2>
+<p>A scenario where we want to accept an arbitrary map, convert it into an Ecto schema, then save it to a database.
+In the <code class="inline">SomeContext</code> module, there are three functions showcasing the same logic.
+One function uses a <code class="inline">with</code> chain, the other two use a <a href="Rinku.html"><code class="inline">Rinku</code></a> chain.</p><pre><code class="makeup elixir"><span class="kd">defmodule</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="w"> </span><span class="k" data-group-id="8816723777-1">do</span><span class="w">
+  </span><span class="na">@callback</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="8816723777-2">(</span><span class="n">params</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">map</span><span class="p" data-group-id="8816723777-3">(</span><span class="p" data-group-id="8816723777-3">)</span><span class="p" data-group-id="8816723777-2">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Ecto.Changeset</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="8816723777-4">(</span><span class="p" data-group-id="8816723777-4">)</span><span class="w">
+  </span><span class="na">@callback</span><span class="w"> </span><span class="n">coerce</span><span class="p" data-group-id="8816723777-5">(</span><span class="n">changeset</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="nc">Ecto.Changeset</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="8816723777-6">(</span><span class="p" data-group-id="8816723777-6">)</span><span class="p" data-group-id="8816723777-5">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="n">t</span><span class="p" data-group-id="8816723777-7">(</span><span class="p" data-group-id="8816723777-7">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p" data-group-id="8816723777-8">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="nc">Ecto.Changeset</span><span class="o">.</span><span class="n">t</span><span class="p" data-group-id="8816723777-9">(</span><span class="p" data-group-id="8816723777-9">)</span><span class="p" data-group-id="8816723777-8">}</span><span class="w">
+  </span><span class="na">@callback</span><span class="w"> </span><span class="n">save</span><span class="p" data-group-id="8816723777-10">(</span><span class="n">t</span><span class="p" data-group-id="8816723777-11">(</span><span class="p" data-group-id="8816723777-11">)</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-10">)</span><span class="w"> </span><span class="o">::</span><span class="w"> </span><span class="p" data-group-id="8816723777-12">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">t</span><span class="p" data-group-id="8816723777-13">(</span><span class="p" data-group-id="8816723777-13">)</span><span class="p" data-group-id="8816723777-12">}</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="p" data-group-id="8816723777-14">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:forbidden</span><span class="p" data-group-id="8816723777-14">}</span><span class="w">
+</span><span class="k" data-group-id="8816723777-1">end</span><span class="w">
+
+</span><span class="kd">defmodule</span><span class="w"> </span><span class="nc">SomeContext</span><span class="w"> </span><span class="k" data-group-id="8816723777-15">do</span><span class="w">
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create_via_with</span><span class="p" data-group-id="8816723777-16">(</span><span class="n">record_params</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-16">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-17">do</span><span class="w">
+    </span><span class="k">with</span><span class="w"> </span><span class="p" data-group-id="8816723777-18">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="8816723777-18">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">changeset</span><span class="p" data-group-id="8816723777-19">(</span><span class="n">record_params</span><span class="p" data-group-id="8816723777-19">)</span><span class="p">,</span><span class="w">
+         </span><span class="p" data-group-id="8816723777-20">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">struct</span><span class="p" data-group-id="8816723777-20">}</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">coerce</span><span class="p" data-group-id="8816723777-21">(</span><span class="n">changeset</span><span class="p" data-group-id="8816723777-21">)</span><span class="p">,</span><span class="w">
+         </span><span class="p" data-group-id="8816723777-22">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">result</span><span class="p" data-group-id="8816723777-22">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">&lt;-</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">save</span><span class="p" data-group-id="8816723777-23">(</span><span class="n">struct</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-23">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-24">do</span><span class="w">
+         </span><span class="n">result</span><span class="w">
+    </span><span class="k" data-group-id="8816723777-24">else</span><span class="w">
+      </span><span class="p" data-group-id="8816723777-25">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8816723777-26">%</span><span class="nc" data-group-id="8816723777-26">Ecto.Changeset</span><span class="p" data-group-id="8816723777-26">{</span><span class="p" data-group-id="8816723777-26">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">error_changeset</span><span class="p" data-group-id="8816723777-25">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-27">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:invalid_params</span><span class="p">,</span><span class="w"> </span><span class="n">error_changeset</span><span class="p" data-group-id="8816723777-27">}</span><span class="w">
+      </span><span class="p" data-group-id="8816723777-28">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:forbidden</span><span class="p" data-group-id="8816723777-28">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-29">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_allowed_to_save</span><span class="p" data-group-id="8816723777-29">}</span><span class="w">
+    </span><span class="k" data-group-id="8816723777-24">end</span><span class="w">
+  </span><span class="k" data-group-id="8816723777-17">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create_via_rinku</span><span class="p" data-group-id="8816723777-30">(</span><span class="n">record_params</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-30">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-31">do</span><span class="w">
+    </span><span class="n">record_params</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8816723777-32">(</span><span class="p" data-group-id="8816723777-32">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-33">(</span><span class="p" data-group-id="8816723777-34">{</span><span class="nc">SomeSchema</span><span class="p">,</span><span class="w"> </span><span class="ss">:changeset</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8816723777-35">[</span><span class="p" data-group-id="8816723777-35">]</span><span class="p" data-group-id="8816723777-34">}</span><span class="p" data-group-id="8816723777-33">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-36">(</span><span class="p" data-group-id="8816723777-37">{</span><span class="nc">SomeSchema</span><span class="p">,</span><span class="w"> </span><span class="ss">:coerce</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8816723777-38">[</span><span class="p" data-group-id="8816723777-38">]</span><span class="p" data-group-id="8816723777-37">}</span><span class="p" data-group-id="8816723777-36">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-39">(</span><span class="p" data-group-id="8816723777-40">{</span><span class="nc">SomeSchema</span><span class="p">,</span><span class="w"> </span><span class="ss">:save</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-40">}</span><span class="p" data-group-id="8816723777-39">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="8816723777-41">(</span><span class="p" data-group-id="8816723777-41">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="8816723777-42">(</span><span class="p" data-group-id="8816723777-42">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="k">case</span><span class="w"> </span><span class="k" data-group-id="8816723777-43">do</span><span class="w">
+      </span><span class="p" data-group-id="8816723777-44">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="p" data-group-id="8816723777-45">%</span><span class="nc" data-group-id="8816723777-45">Ecto.Changeset</span><span class="p" data-group-id="8816723777-45">{</span><span class="p" data-group-id="8816723777-45">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">error_changeset</span><span class="p" data-group-id="8816723777-44">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-46">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:invalid_params</span><span class="p">,</span><span class="w"> </span><span class="n">error_changeset</span><span class="p" data-group-id="8816723777-46">}</span><span class="w">
+      </span><span class="p" data-group-id="8816723777-47">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:forbbiden</span><span class="p" data-group-id="8816723777-47">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-48">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_allowed_to_save</span><span class="p" data-group-id="8816723777-48">}</span><span class="w">
+      </span><span class="p" data-group-id="8816723777-49">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="c">_result</span><span class="p" data-group-id="8816723777-49">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">result</span><span class="w">
+    </span><span class="k" data-group-id="8816723777-43">end</span><span class="w">
+  </span><span class="k" data-group-id="8816723777-31">end</span><span class="w">
+
+  </span><span class="kd">def</span><span class="w"> </span><span class="nf">create_via_rinku_alt</span><span class="p" data-group-id="8816723777-50">(</span><span class="n">record_params</span><span class="p">,</span><span class="w"> </span><span class="n">access_token</span><span class="p" data-group-id="8816723777-50">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-51">do</span><span class="w">
+    </span><span class="n">record_params</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8816723777-52">(</span><span class="p" data-group-id="8816723777-52">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-53">(</span><span class="k" data-group-id="8816723777-54">fn</span><span class="w"> </span><span class="n">params</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> 
+      </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">changeset</span><span class="p" data-group-id="8816723777-55">(</span><span class="n">params</span><span class="p" data-group-id="8816723777-55">)</span><span class="w"> 
+    </span><span class="k" data-group-id="8816723777-54">end</span><span class="p" data-group-id="8816723777-53">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-56">(</span><span class="k" data-group-id="8816723777-57">fn</span><span class="w"> </span><span class="n">changeset</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> 
+      </span><span class="k">case</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">coerce</span><span class="p" data-group-id="8816723777-58">(</span><span class="n">changeset</span><span class="p" data-group-id="8816723777-58">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-59">do</span><span class="w">
+        </span><span class="p" data-group-id="8816723777-60">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="8816723777-60">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-61">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:invalid_params</span><span class="p">,</span><span class="w"> </span><span class="n">changeset</span><span class="p" data-group-id="8816723777-61">}</span><span class="w">
+        </span><span class="n">instance</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-62">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">instance</span><span class="p" data-group-id="8816723777-62">}</span><span class="w">
+      </span><span class="k" data-group-id="8816723777-59">end</span><span class="w"> 
+    </span><span class="k" data-group-id="8816723777-57">end</span><span class="p" data-group-id="8816723777-56">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8816723777-63">(</span><span class="k" data-group-id="8816723777-64">fn</span><span class="w"> </span><span class="p" data-group-id="8816723777-65">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="n">instance</span><span class="p" data-group-id="8816723777-65">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> 
+      </span><span class="k">case</span><span class="w"> </span><span class="nc">SomeSchema</span><span class="o">.</span><span class="n">save</span><span class="p" data-group-id="8816723777-66">(</span><span class="n">instance</span><span class="p" data-group-id="8816723777-66">)</span><span class="w"> </span><span class="k" data-group-id="8816723777-67">do</span><span class="w">
+        </span><span class="p" data-group-id="8816723777-68">{</span><span class="ss">:ok</span><span class="p">,</span><span class="w"> </span><span class="c">_result</span><span class="p" data-group-id="8816723777-68">}</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">result</span><span class="w">
+        </span><span class="p" data-group-id="8816723777-69">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:forbidden</span><span class="p" data-group-id="8816723777-69">}</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="p" data-group-id="8816723777-70">{</span><span class="ss">:error</span><span class="p">,</span><span class="w"> </span><span class="ss">:not_allowed_to_save</span><span class="p" data-group-id="8816723777-70">}</span><span class="w">
+      </span><span class="k" data-group-id="8816723777-67">end</span><span class="w">
+    </span><span class="k" data-group-id="8816723777-64">end</span><span class="p" data-group-id="8816723777-63">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="8816723777-71">(</span><span class="p" data-group-id="8816723777-71">)</span><span class="w">
+    </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="8816723777-72">(</span><span class="p" data-group-id="8816723777-72">)</span><span class="w">
+  </span><span class="k" data-group-id="8816723777-51">end</span><span class="w">
+</span><span class="k" data-group-id="8816723777-15">end</span></code></pre><h2 id="installation" class="section-heading">
+  <a href="#installation" class="hover-link"><span class="icon-link" aria-hidden="true"></span></a>
+  Installation
+</h2>
+<p>Rinku is not in Hex.
+You can install it directly via Git.</p><pre><code class="makeup elixir"><span class="w">  </span><span class="kd">def</span><span class="w"> </span><span class="nf">deps</span><span class="w"> </span><span class="k" data-group-id="1627902653-1">do</span><span class="w">
+    </span><span class="p" data-group-id="1627902653-2">[</span><span class="w">
+        </span><span class="p" data-group-id="1627902653-3">{</span><span class="ss">:rink</span><span class="p">,</span><span class="w"> </span><span class="ss">github</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;adigitalmonk/rinku&quot;</span><span class="p">,</span><span class="w"> </span><span class="ss">branch</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;master&quot;</span><span class="p" data-group-id="1627902653-3">}</span><span class="w">
+    </span><span class="p" data-group-id="1627902653-2">]</span><span class="w">
+  </span><span class="k" data-group-id="1627902653-1">end</span></code></pre>
+<div class="bottom-actions">
+  <div class="bottom-actions-item">
+
+      <a href="api-reference.html" class="bottom-actions-button" rel="prev">
+        <span class="subheader">
+          ← Previous Page
+        </span>
+        <span class="title">
+API Reference
+        </span>
+      </a>
+
+  </div>
+  <div class="bottom-actions-item">
+
+  </div>
+</div>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.24.1) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+  </body>
+</html>

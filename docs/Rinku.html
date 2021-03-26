@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="generator" content="ExDoc v0.24.1">
+    <meta name="project" content="rinku v0.0.1">
+
+    <title>Rinku — rinku v0.0.1</title>
+    <link rel="stylesheet" href="dist/elixir-a172fe91e725dcb259e2.css" />
+
+    <script src="dist/sidebar_items-d1b779f2ad.js"></script>
+
+      <script src="docs_config.js"></script>
+
+    <script async src="dist/app-f27ff079945e43879c46.js"></script>
+
+  </head>
+  <body data-type="modules">
+    <script>
+
+      try {
+        if (localStorage.getItem('night-mode') === 'true') {
+          document.body.classList.add('night-mode');
+        }
+      } catch (error) { }
+    </script>
+
+<div class="main">
+
+<button class="sidebar-button sidebar-toggle">
+  <span class="icon-menu" title="Collapse/expand sidebar"></span>
+</button>
+
+<section class="sidebar">
+  <form class="sidebar-search" action="search.html">
+    <button type="submit" class="search-button" aria-label="Submit Search">
+      <span class="icon-search" aria-hidden="true" title="Submit search"></span>
+    </button>
+    <button type="button" tabindex="-1" class="search-close-button" aria-label="Cancel Search">
+      <span class="icon-cross" aria-hidden="true" title="Cancel search"></span>
+    </button>
+    <label class="search-label">
+      <input name="q" type="text" class="search-input" placeholder="Search..." aria-label="Input your search terms" autocomplete="off" />
+    </label>
+  </form>
+
+  <div class="autocomplete">
+    <div class="autocomplete-results">
+    </div>
+  </div>
+
+  <div class="sidebar-header">
+    <div class="sidebar-projectDetails">
+      <a href="https://adigitalmonk.github.io/rinku" class="sidebar-projectName">
+rinku
+      </a>
+      <strong class="sidebar-projectVersion">
+        v0.0.1
+      </strong>
+    </div>
+
+  </div>
+
+  <ul class="sidebar-listNav">
+    <li><a id="extras-list-link" href="#full-list">Pages</a></li>
+
+      <li><a id="modules-list-link" href="#full-list">Modules</a></li>
+
+
+  </ul>
+  <div class="gradient"></div>
+  <ul id="full-list" class="sidebar-fullList"></ul>
+</section>
+
+<section class="content">
+  <div class="content-outer">
+    <div id="content" class="content-inner">
+
+      <h1>
+Rinku <small class="app-vsn">(rinku v0.0.1)</small>
+
+          <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L1" title="View Source" class="view-source" rel="help">
+            <span class="icon-code" aria-hidden="true"></span>
+            <span class="sr-only">View Source</span>
+          </a>
+
+      </h1>
+
+
+        <section id="moduledoc">
+<p>A pattern for composing functions to execute in a chain.
+Execution will stop when all links in the chain have been resolved, or any link in the chain returns an error.</p><p>The initial input will be provided as the first argument in the chain.
+The result of each link in the chain will be supplied to the next link in the chain.</p><p>The input will always be the first argument provided to the next link in the chain.</p>
+        </section>
+
+
+        <section id="summary" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#summary">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+            Summary
+          </h1>
+
+  <div class="summary-types summary">
+    <h2>
+      <a href="#types">Types</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:link_callback/0">link_callback()</a>
+
+  </div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#t:t/0">t()</a>
+
+  </div>
+
+</div>
+
+  </div>
+
+  <div class="summary-functions summary">
+    <h2>
+      <a href="#functions">Functions</a>
+    </h2>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#link/3">link(rinku, new_link, link_name \\ nil)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Add a new link to the Rinku chain.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#link_result/2">link_result(rinku, resolved_name)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Get the result for a specific named execution step.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#new/2">new(intial_value \\ nil, input_name \\ :seed)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Create a new Rinku chain.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#result/1">result(rinku)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Get the result from a processed chain.</p></div>
+
+</div>
+<div class="summary-row">
+  <div class="summary-signature">
+    <a href="#run/1">run(rinku)</a>
+
+  </div>
+
+    <div class="summary-synopsis"><p>Execute a built rinku chain.</p></div>
+
+</div>
+
+  </div>
+
+        </section>
+
+
+        <section id="types" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#types">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Types
+          </h1>
+          <div class="types-list">
+<section class="detail" id="t:link_callback/0">
+
+  <div class="detail-header">
+    <a href="#t:link_callback/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">link_callback()</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L21" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>link_callback() ::
+  (... -&gt; <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()})
+  | {(... -&gt; <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>()}
+  | {<a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">module</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>(), <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">term</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#built-in-types">list</a>()}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+<section class="detail" id="t:t/0">
+
+  <div class="detail-header">
+    <a href="#t:t/0" class="detail-link" title="Link to this type">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this type</span>
+    </a>
+    <h1 class="signature">t()</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L15" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>t() :: %Rinku{
+  links: [<a href="Rinku.Link.html#t:t/0">Rinku.Link.t</a>()],
+  resolved: [<a href="Rinku.Resolved.html#t:t/0">Rinku.Resolved.t</a>()],
+  result: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()
+}</pre>
+
+      </div>
+
+
+  </section>
+</section>
+
+          </div>
+        </section>
+
+        <section id="functions" class="details-list">
+          <h1 class="section-heading">
+            <a class="hover-link" href="#functions">
+              <span class="icon-link" aria-hidden="true"></span>
+              <span class="sr-only">Link to this section</span>
+            </a>
+Functions
+          </h1>
+          <div class="functions-list">
+<section class="detail" id="link/3">
+
+    <span id="link/2"></span>
+
+  <div class="detail-header">
+    <a href="#link/3" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">link(rinku, new_link, link_name \\ nil)</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L54" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>link(
+  rinku :: <a href="#t:t/0">t</a>(),
+  new_link :: <a href="#t:link_callback/0">link_callback</a>(),
+  link_name :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()
+) :: <a href="#t:t/0">t</a>()</pre>
+
+      </div>
+
+<p>Add a new link to the Rinku chain.</p>
+  </section>
+</section>
+<section class="detail" id="link_result/2">
+
+  <div class="detail-header">
+    <a href="#link_result/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">link_result(rinku, resolved_name)</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L107" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>link_result(rinku :: <a href="#t:t/0">t</a>(), link_name :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Get the result for a specific named execution step.</p><pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="8217087944-1">(</span><span class="p" data-group-id="8217087944-1">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8217087944-2">(</span><span class="k" data-group-id="8217087944-3">fn</span><span class="w"> </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="8217087944-3">end</span><span class="p">,</span><span class="w"> </span><span class="ss">:step1</span><span class="p" data-group-id="8217087944-2">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="8217087944-4">(</span><span class="k" data-group-id="8217087944-5">fn</span><span class="w"> </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="k" data-group-id="8217087944-5">end</span><span class="p">,</span><span class="w"> </span><span class="ss">:step2</span><span class="p" data-group-id="8217087944-4">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="8217087944-6">(</span><span class="p" data-group-id="8217087944-6">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link_result</span><span class="p" data-group-id="8217087944-7">(</span><span class="ss">:step1</span><span class="p" data-group-id="8217087944-7">)</span><span class="w">
+</span><span class="mi">1</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="new/2">
+
+    <span id="new/0"></span>
+
+    <span id="new/1"></span>
+
+  <div class="detail-header">
+    <a href="#new/2" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">new(intial_value \\ nil, input_name \\ :seed)</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L42" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>new(initial_value :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>(), input_name :: <a href="https://hexdocs.pm/elixir/String.html#t:t/0">String.t</a>() | <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">atom</a>()) :: <a href="#t:t/0">t</a>()</pre>
+
+      </div>
+
+<p>Create a new Rinku chain.</p><pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="1144235008-1">(</span><span class="p" data-group-id="1144235008-1">)</span><span class="w">
+</span><span class="p" data-group-id="1144235008-2">%</span><span class="nc" data-group-id="1144235008-2">Rinku</span><span class="p" data-group-id="1144235008-2">{</span><span class="w">
+  </span><span class="ss">links</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1144235008-3">[</span><span class="p" data-group-id="1144235008-3">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">resolved</span><span class="p">:</span><span class="w"> </span><span class="p" data-group-id="1144235008-4">[</span><span class="w">
+    </span><span class="p" data-group-id="1144235008-5">%</span><span class="nc" data-group-id="1144235008-5">Rinku.Resolved</span><span class="p" data-group-id="1144235008-5">{</span><span class="w">
+      </span><span class="ss">name</span><span class="p">:</span><span class="w"> </span><span class="ss">:seed</span><span class="p">,</span><span class="w">
+      </span><span class="ss">result</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="w">
+    </span><span class="p" data-group-id="1144235008-5">}</span><span class="w">
+  </span><span class="p" data-group-id="1144235008-4">]</span><span class="p">,</span><span class="w">
+  </span><span class="ss">result</span><span class="p">:</span><span class="w"> </span><span class="no">nil</span><span class="w">
+</span><span class="p" data-group-id="1144235008-2">}</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="result/1">
+
+  <div class="detail-header">
+    <a href="#result/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">result(rinku)</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L98" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>result(rinku :: <a href="#t:t/0">t</a>()) :: <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>() | {:error, <a href="https://hexdocs.pm/elixir/typespecs.html#basic-types">any</a>()}</pre>
+
+      </div>
+
+<p>Get the result from a processed chain.</p><pre><code class="makeup elixir"><span class="gp unselectable">iex&gt; </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">new</span><span class="p" data-group-id="3166088116-1">(</span><span class="p" data-group-id="3166088116-1">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">link</span><span class="p" data-group-id="3166088116-2">(</span><span class="k" data-group-id="3166088116-3">fn</span><span class="w"> </span><span class="bp">_</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="k" data-group-id="3166088116-3">end</span><span class="p" data-group-id="3166088116-2">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">run</span><span class="p" data-group-id="3166088116-4">(</span><span class="p" data-group-id="3166088116-4">)</span><span class="w"> </span><span class="o">|&gt;</span><span class="w"> </span><span class="nc">Rinku</span><span class="o">.</span><span class="n">result</span><span class="p" data-group-id="3166088116-5">(</span><span class="p" data-group-id="3166088116-5">)</span><span class="w">
+</span><span class="mi">1</span></code></pre>
+  </section>
+</section>
+<section class="detail" id="run/1">
+
+  <div class="detail-header">
+    <a href="#run/1" class="detail-link" title="Link to this function">
+      <span class="icon-link" aria-hidden="true"></span>
+      <span class="sr-only">Link to this function</span>
+    </a>
+    <h1 class="signature">run(rinku)</h1>
+
+      <a href="https://github.com/adigitalmonk/rinku/blob/v0.0.1/lib/rinku.ex#L63" class="view-source" rel="help" title="View Source">
+       <span class="icon-code" aria-hidden="true"></span>
+       <span class="sr-only">View Source</span>
+     </a>
+
+
+  </div>
+
+  <section class="docstring">
+
+      <h2>Specs</h2>
+      <div class="specs">
+
+          <pre>run(rinku :: <a href="#t:t/0">t</a>()) :: <a href="#t:t/0">t</a>()</pre>
+
+      </div>
+
+<p>Execute a built rinku chain.</p>
+  </section>
+</section>
+
+          </div>
+        </section>
+
+      <footer class="footer">
+        <p>
+          <span class="line">
+            Built using
+            <a href="https://github.com/elixir-lang/ex_doc" title="ExDoc" target="_blank" rel="help noopener">ExDoc</a> (v0.24.1) for the
+            <a href="https://elixir-lang.org" title="Elixir" target="_blank">Elixir programming language</a>.
+          </span>
+          <span class="line">
+            Designed by
+            <a href="https://twitter.com/dignifiedquire" target="_blank" rel="noopener" title="@dignifiedquire">Friedel Ziegelmayer</a>.
+          </span>
+        </p>
+        <p>
+
+            <a href="api-reference.html" title="API reference" class="line footer-button">API Reference</a>
+
+          <button class="line footer-button display-shortcuts-help">
+            Display keyboard shortcuts
+          </button>
+          <button class="line footer-button night-mode-toggle">
+            Toggle night mode
+          </button>
+          <button class="line footer-button display-quick-switch">
+            Go to a HexDocs package
+          </button>
+          <button class="line footer-button tooltips-toggle">
+            <span class="tooltips-option-disable">Disable tooltips</span>
+            <span class="tooltips-option-enable">Enable tooltips</span>
+          </button>
+        </p>
+      </footer>
+    </div>
+  </div>
+</section>
+</div>
+
+  </body>
+</html>

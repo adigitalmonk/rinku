@@ -1,13 +1,16 @@
 defmodule Rinku.MixProject do
   use Mix.Project
 
+  @version "0.0.1"
+
   def project do
     [
       app: :rinku,
-      version: "0.0.1",
-      elixir: "~> 1.11",
+      version: @version,
+      elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
+      docs: [source_ref: "v#{@version}", main: "readme", extras: ["README.md"]],
       dialyzer: [
         ignore_warnings: "dialyzer.ignore.exs",
         list_unused_filters: true,
@@ -27,6 +30,7 @@ defmodule Rinku.MixProject do
   defp deps do
     [
       {:credo, "~> 1.5", only: :dev, runtime: false},
+      {:ex_doc, "~> 0.24", only: :dev, runtime: false},
       {:dialyxir, "~> 1.0", only: :dev, runtime: false}
     ]
   end

@@ -1,12 +1,17 @@
 defmodule Rinku.Link do
-  @moduledoc false
+  @moduledoc """
+  Structure of a link in a Rinku chain.
+  """
 
-  @type t() :: %__MODULE__{}
-  @type callback() :: Linku.link()
+  defstruct [:name, :callback]
+  alias Rinku.Resolved
 
-  defstruct [:name, :callback, :result]
+  @type t :: %__MODULE__{
+          name: String.t() | atom(),
+          callback: Rinku.link_callback()
+        }
 
-  @spec new(callback :: callback(), name :: String.t() | atom()) :: t()
+  @spec new(callback :: Rinku.link_callback(), name :: String.t() | atom()) :: t()
   def new(callback, name) do
     %__MODULE__{
       name: name,
@@ -14,30 +19,25 @@ defmodule Rinku.Link do
     }
   end
 
-  @spec result(t(), any()) :: t()
-  def result(link, value) do
-    %__MODULE__{
-      link
-      | result: value
-    }
-  end
-
   @doc false
-  @spec process_link(t(), any) :: any
-  def process_link(%__MODULE__{callback: {mod, func, arguments}} = link, link_input) do
+  @spec resolve(t(), any) :: Resolved.t()
+  def resolve(%__MODULE__{name: name, callback: {mod, func, arguments}}, link_input) do
     arguments = [link_input | put_into_list(arguments)]
 
-    result(link, apply(mod, func, arguments))
+    apply(mod, func, arguments)
+    |> Resolved.new(name)
   end
 
-  def process_link(%__MODULE__{callback: {func, arguments}} = link, link_input) do
+  def resolve(%__MODULE__{name: name, callback: {func, arguments}}, link_input) do
     arguments = [link_input | put_into_list(arguments)]
 
-    result(link, apply(func, arguments))
+    apply(func, arguments)
+    |> Resolved.new(name)
   end
 
-  def process_link(%__MODULE__{callback: func} = link, link_input) do
-    result(link, apply(func, [link_input]))
+  def resolve(%__MODULE__{name: name, callback: func}, link_input) do
+    apply(func, [link_input])
+    |> Resolved.new(name)
   end
 
   defp put_into_list(item) when is_list(item), do: item

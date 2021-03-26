@@ -1,18 +1,24 @@
 defmodule Rinku do
   @moduledoc """
-  A pattern for composing function calls in a specific order.
-  Will stops the chain early on an error or failure.
+  A pattern for composing functions to execute in a chain.
+  Execution will stop when all links in the chain have been resolved, or any link in the chain returns an error.
 
-  The initial value "input" will be provided as the first argument into the chain.
+  The initial input will be provided as the first argument in the chain.
   The result of each link in the chain will be supplied to the next link in the chain.
 
   The input will always be the first argument provided to the next link in the chain.
   """
-  defstruct [:links, :result]
+  defstruct [:links, :resolved, :result]
   alias Rinku.Link
+  alias Rinku.Resolved
 
-  @type t() :: %__MODULE__{}
-  @type link() ::
+  @type t() :: %__MODULE__{
+          links: [Link.t()],
+          resolved: [Resolved.t()],
+          result: any()
+        }
+
+  @type link_callback() ::
           (... -> any() | {:error, any()})
           | {(... -> any() | {:error, any()}), term() | list()}
           | {module(), atom(), term() | list()}
@@ -20,56 +26,54 @@ defmodule Rinku do
   @doc """
   Create a new Rinku chain.
 
-  iex> Rinku.new()
-  %Rinku{links: []}
+      iex> Rinku.new()
+      %Rinku{
+        links: [],
+        resolved: [
+          %Rinku.Resolved{
+            name: :seed,
+            result: nil
+          }
+        ],
+        result: nil
+      }
   """
-  @spec new() :: t()
-  def new do
+  @spec new(initial_value :: any(), input_name :: String.t() | atom()) :: t()
+  def new(intial_value \\ nil, input_name \\ :seed) do
     %__MODULE__{
-      links: []
+      links: [],
+      resolved: [%Resolved{result: intial_value, name: input_name}],
+      result: nil
     }
   end
 
   @doc """
-  Add a new step to the Rinku chain.
-  Either an anonymous function that takes one argument or a tuple of `{module, function, arguments}` can be provided.
-
-  iex> Rinku.new() |> Rinku.link({SomeModule, :some_func, 1}, :some_link)
-  %Rinku{
-    links: [
-      %Rinku.Link{
-        name: :some_link,
-        callback: {SomeModule, :some_func, 1}
-      }
-    ]
-  }
+  Add a new link to the Rinku chain.
   """
-  @spec link(chain :: t(), new_link :: link(), link_name :: String.t() | atom()) :: t()
-  def link(%__MODULE__{links: links} = chain, new_link, link_name \\ nil) do
+  @spec link(rinku :: t(), new_link :: link_callback(), link_name :: String.t() | atom()) :: t()
+  def link(%__MODULE__{links: links} = rinku, new_link, link_name \\ nil) do
     link = Link.new(new_link, link_name)
-    %__MODULE__{chain | links: [link | links]}
+    %__MODULE__{rinku | links: [link | links]}
   end
 
   @doc """
   Execute a built rinku chain.
   """
-  @spec run(t()) :: t()
-  def run(%__MODULE__{links: links} = chain, input \\ nil, first_data_name \\ :seed) do
-    initial_link = %Link{result: input, name: first_data_name}
-
+  @spec run(rinku :: t()) :: t()
+  def run(%__MODULE__{links: links, resolved: resolved} = rinku) do
     [final | _] =
-      processed_links =
+      resolved_links =
       links
       |> Enum.reverse()
-      |> Enum.reduce_while([initial_link], fn link, [previous | _processed] = links ->
-        processed_link = Link.process_link(link, previous.result)
+      |> Enum.reduce_while(resolved, fn link, [previous | _resolved] = links ->
+        resolved_link = Link.resolve(link, previous.result)
 
-        end_loop(processed_link.result, [processed_link | links])
+        end_loop(resolved_link.result, [resolved_link | links])
       end)
 
     %__MODULE__{
-      chain
-      | links: processed_links,
+      rinku
+      | resolved: resolved_links,
         result: final.result
     }
   end
@@ -86,15 +90,24 @@ defmodule Rinku do
 
   @doc """
   Get the result from a processed chain.
+
+      iex> Rinku.new() |> Rinku.link(fn _ -> 1 end) |> Rinku.run() |> Rinku.result()
+      1
   """
-  @spec result(t()) :: any() | {:error, any()}
+  @spec result(rinku :: t()) :: any() | {:error, any()}
   def result(%__MODULE__{result: result}), do: result
 
-  @spec link_result(t(), link_name :: String.t()) :: any() | {:error, any()}
-  def link_result(%__MODULE__{links: links}, link_name) do
-    case Enum.find(links, &(&1.name == link_name)) do
+  @doc """
+  Get the result for a specific named execution step.
+
+      iex> Rinku.new() |> Rinku.link(fn _ -> 1 end, :step1) |> Rinku.link(fn _ -> 2 end, :step2) |> Rinku.run() |> Rinku.link_result(:step1)
+      1
+  """
+  @spec link_result(rinku :: t(), link_name :: String.t()) :: any() | {:error, any()}
+  def link_result(%__MODULE__{resolved: resolved}, resolved_name) do
+    case Enum.find(resolved, &(&1.name == resolved_name)) do
       nil -> nil
-      link -> link.result
+      resolved -> resolved.result
     end
   end
 end

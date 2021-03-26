@@ -12,7 +12,11 @@ defmodule RinkuTest do
 
   describe "creating a new chain" do
     test "starts with an empty list of links" do
-      assert Rinku.new() == %Rinku{links: []}
+      assert Rinku.new().links == []
+    end
+
+    test "initial value is stored in the processed chain" do
+      assert Rinku.new(:value, :name).resolved == [%Rinku.Resolved{name: :name, result: :value}]
     end
   end
 
@@ -46,8 +50,6 @@ defmodule RinkuTest do
       chain =
         Rinku.new()
         |> Rinku.link(fn input -> input end)
-        |> Rinku.link(fn input -> input end)
-        |> Rinku.link(fn input -> input end)
 
       chain.links
       |> Enum.each(fn link ->
@@ -67,15 +69,40 @@ defmodule RinkuTest do
 
     test "steps through each type of argument successfully" do
       result =
-        Rinku.new()
+        1
+        |> Rinku.new()
         |> Rinku.link({RinkuTest.Adder, :add, 1})
         |> Rinku.link({RinkuTest.Adder, :add2, [1, 2]})
         |> Rinku.link({fn input, val2 -> input + val2 end, 1})
         |> Rinku.link(fn input -> input + 1 end)
-        |> Rinku.run(1)
+        |> Rinku.run()
         |> Rinku.result()
 
       assert result == 7
+    end
+
+    test "can be re-run with more steps added" do
+      chain =
+        Rinku.new()
+        |> Rinku.link(fn _ -> :one end)
+
+      one? =
+        chain
+        |> Rinku.run()
+        |> Rinku.result()
+
+      assert one? == :one
+
+      two? =
+        chain
+        |> Rinku.link(fn one? ->
+          assert one? == :one
+          :two
+        end)
+        |> Rinku.run()
+        |> Rinku.result()
+
+      assert two? == :two
     end
 
     test "will end early if an error tuple is returned from a function" do
@@ -102,6 +129,7 @@ defmodule RinkuTest do
 
     test "will end early if an error atom of any length is returned from a function" do
       [
+        :error,
         {:error, 1},
         {:error, 1, 2},
         {:error, 1, 2, 3},
@@ -126,9 +154,9 @@ defmodule RinkuTest do
   describe "naming and retrieving results" do
     test "allows you to rename the first step" do
       processed_chain =
-        Rinku.new()
+        Rinku.new(1, :test_name)
         |> Rinku.link(fn input -> input + 1 end, :first)
-        |> Rinku.run(1, :test_name)
+        |> Rinku.run()
 
       assert Rinku.link_result(processed_chain, :test_name) == 1
       assert Rinku.link_result(processed_chain, :first) == 2
@@ -137,12 +165,13 @@ defmodule RinkuTest do
 
     test "allows you to retrieve result of an earlier step" do
       processed_chain =
-        Rinku.new()
+        1
+        |> Rinku.new()
         |> Rinku.link(fn input -> input + 1 end, :first)
         |> Rinku.link(fn input -> input + 1 end, :second)
         |> Rinku.link(fn _ -> {:error, :test} end)
         |> Rinku.link(fn input -> input + 1 end, :third)
-        |> Rinku.run(1)
+        |> Rinku.run()
 
       assert Rinku.link_result(processed_chain, :seed) == 1
       assert Rinku.link_result(processed_chain, :first) == 2
@@ -151,16 +180,17 @@ defmodule RinkuTest do
       assert Rinku.result(processed_chain) == {:error, :test}
 
       processed_chain =
-        Rinku.new()
+        Rinku.new(:input_value, :input_name)
         |> Rinku.link(fn _input -> :result1 end, :step1)
         |> Rinku.link(fn _input -> :result2 end, :step2)
         |> Rinku.link(fn _input -> :result3 end, :step3)
-        |> Rinku.run(:input_value, :input_name)
+        |> Rinku.run()
 
       assert processed_chain |> Rinku.link_result(:input_name) == :input_value
       assert processed_chain |> Rinku.link_result(:step1) == :result1
       assert processed_chain |> Rinku.link_result(:step2) == :result2
       assert processed_chain |> Rinku.link_result(:step3) == :result3
+      assert processed_chain |> Rinku.result() == :result3
     end
   end
 end

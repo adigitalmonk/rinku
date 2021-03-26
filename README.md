@@ -4,20 +4,60 @@
 
 Rinku is a simple abstraction to enable linking a series of steps.
 
-To begin, multiple steps are linked together using `Rinku.link`.
-Once we've built a chain of steps, the `run` function will accept an initial input and begin the chain.
-One by one, each function is called in the order added to the chain.
+To begin a new `Rinku.new/2` chain is created with some initial value (`nil` by default).
+Then, multiple links / function calls are added together using `Rinku.link/2`.
+Once we've built the chain, the `Rinku.run/1` function resolve the links in the order they were added.
+The first argument to a link is always the result of the previous link's execution.
 
 At the end of a function's execution, the result is passed the first argument for the next.
 The chain will end immediately if any function returns a tuple with `:error` as the first element.
-Once the chain exhausts all of it's links, the `result` function will extract the final result.
+Once the chain exhausts all of it's links, the `Rinku.result/1` function will extract the final result.
 
 ```elixir
 3 =
-  Rinku.new()
+  1
+  |> Rinku.new()
   |> Rinku.link(fn input -> input + 1 end)
   |> Rinku.link(fn input -> input + 1 end)
-  |> Rinku.run(1)
+  |> Rinku.run()
+  |> Rinku.result()
+```
+
+You can provide extra arguments to individual steps (from a number of ways) instead of just feeding data through the chain.
+
+```elixir
+previous_result = 
+  1
+  |> Rinku.new()
+  |> Rinku.link({fn input, four -> input + four end, 4})
+  |> Rinku.run()
+  |> Rinku.result()
+
+assert previous_result == 5
+
+new_result = 
+  5
+  |> Rinku.new()
+  |> Rinku.link(fn input -> input + previous_result end)
+  |> Rinku.run()
+  |> Rinku.result()
+
+assert new_result == 10
+```
+
+Additional arguments are provided to module calls using the common tuple format, `{SomeModule, :function, [:one, :two]}`.
+The input from the previous step will always be injected as the first argument, other arguments will be added subsequently.
+
+```elixir
+defmodule SomeMod do
+  def combine(init, a, b), do: init + a + b
+end
+
+5 = 
+  1
+  |> Rinku.new()
+  |> Rinku.link({SomeMod, :combine, [2, 2]})
+  |> Rinku.run()
   |> Rinku.result()
 ```
 
@@ -40,19 +80,47 @@ Naming is optional, but you'll need a unique name to get the correct result for 
 
 ```elixir
 processed_chain = 
-  Rinku.new()
+  Rinku.new(:input_value, :input_name)
   |> Rinku.link(fn _input -> :result1 end, :step1)
   |> Rinku.link(fn _input -> :result2 end, :step2)
   |> Rinku.link(fn _input -> :result3 end, :step3)
-  |> Rinku.run(:input_value, :input_name)
+  |> Rinku.run()
 
 assert processed_chain |> Rinku.link_result(:input_name) == :input_value
 assert processed_chain |> Rinku.link_result(:step1) == :result1
 assert processed_chain |> Rinku.link_result(:step2) == :result2
 assert processed_chain |> Rinku.link_result(:step3) == :result3
+assert processed_chain |> Rinku.result() == :result3
 ```
 
-See [Practical Examples](#practical-examples) for more realistic use cases.
+A completed chain can also be appended and re-run if necessary.
+All steps are re-run, not just the newly added ones.
+
+```elixir
+chain =
+  1
+  |> Rinku.new()
+  |> Rinku.link(fn input -> input + 1 end)
+
+value =
+  chain
+  |> Rinku.run()
+  |> Rinku.result()
+
+assert value == 2
+
+other_value =
+  chain
+  |> Rinku.link(fn input ->
+    input + 1
+  end)
+  |> Rinku.run()
+  |> Rinku.result()
+
+assert other_value == 3
+```
+
+See [Practical Examples](#practical-examples) for a few realistic use cases.
 
 ## Developing
 
@@ -61,8 +129,8 @@ For the Elixir/Erlang versions, please refer to the supplied `.tool-versions` (c
 ## Practical Examples
 
 A scenario where we want to accept an arbitrary map, convert it into an Ecto schema, then save it to a database.
-In the `SomeContext` module, there are two functions showcasing the same logic.
-One function uses a `with` chain, the other uses a `Rinku` chain.
+In the `SomeContext` module, there are three functions showcasing the same logic.
+One function uses a `with` chain, the other two use a `Rinku` chain.
 
 ```elixir
 defmodule SomeSchema do
@@ -84,11 +152,12 @@ defmodule SomeContext do
   end
 
   def create_via_rinku(record_params, access_token) do
-    Rinku.new()
+    record_params
+    |> Rinku.new()
     |> Rinku.link({SomeSchema, :changeset, []})
     |> Rinku.link({SomeSchema, :coerce, []})
     |> Rinku.link({SomeSchema, :save, access_token})
-    |> Rinku.run(record_params)
+    |> Rinku.run()
     |> Rinku.result()
     |> case do
       {:error, %Ecto.Changeset{} = error_changeset} -> {:error, :invalid_params, error_changeset}
@@ -98,7 +167,8 @@ defmodule SomeContext do
   end
 
   def create_via_rinku_alt(record_params, access_token) do
-    Rinku.new()
+    record_params
+    |> Rinku.new()
     |> Rinku.link(fn params -> 
       SomeSchema.changeset(params) 
     end)
@@ -114,7 +184,7 @@ defmodule SomeContext do
         {:error, :forbidden} -> {:error, :not_allowed_to_save}
       end
     end)
-    |> Rinku.run(record_params)
+    |> Rinku.run()
     |> Rinku.result()
   end
 end
@@ -122,7 +192,7 @@ end
 
 ## Installation
 
-Rinku is not currently in Hex.
+Rinku is not in Hex.
 You can install it directly via Git.
 
 ```elixir

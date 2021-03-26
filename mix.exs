@@ -1,4 +1,5 @@
 defmodule Rinku.MixProject do
+  @moduledoc false
   use Mix.Project
 
   @version "0.0.1"
@@ -10,7 +11,12 @@ defmodule Rinku.MixProject do
       elixir: "~> 1.10",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
-      docs: [source_ref: "v#{@version}", main: "readme", extras: ["README.md"]],
+      source_url: "https://github.com/adigitalmonk/rinku",
+      homepage_url: "https://adigitalmonk.github.io/rinku",
+      docs: [
+        main: "readme",
+        extras: ["README.md"]
+      ],
       dialyzer: [
         ignore_warnings: "dialyzer.ignore.exs",
         list_unused_filters: true,
